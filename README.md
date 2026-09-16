@@ -1,111 +1,120 @@
-# Pet Health AI - 반려동물 Healthcare 전체 파이프라인 실습
+# Pet Health AI - End-to-End Pet Healthcare Pipeline
 
-반려동물 건강 관리를 위한 AI 모델 학습 및 배포 전체 파이프라인 실습 프로젝트
+A hands-on project covering the full pipeline from AI model training to deployment for companion animal healthcare management.
 
-## 📋 프로젝트 개요
+## 📋 Project Overview
 
-### 구현 모델
-1. **안구 질환 분류** (Image Classification)
-   - 모델: EfficientNet-B2
-   - 클래스: 정상, 결막염, 백내장 등
-   - 데이터: Roboflow Dog Eye Problems
+### Implemented Models
+1. **Ocular Disease Classification** (Image Classification)
+   - **Model**: EfficientNet-B2
+   - **Classes**: Normal, Conjunctivitis, Cataracts, etc.
+   - **Dataset**: Roboflow Dog Eye Problems
 
-2. **치주 질환 분류** (Image Classification)
-   - 모델: EfficientNet-B2
-   - 클래스: 정상, 치석 1~4단계
-   - 데이터: Roboflow DentalUmeshu (~9,490장)
+2. **Periodontal Disease Classification** (Image Classification)
+   - **Model**: EfficientNet-B2
+   - **Classes**: Normal, Calculus Stages 1–4
+   - **Dataset**: Roboflow DentalUmeshu (~9,490 images)
 
-3. **소변 침전물 탐지** (Object Detection)
-   - 모델: YOLOv8
-   - 클래스: 백혈구, 적혈구, 결정체, 상피세포 등 14개
-   - 데이터: Roboflow Urine Sediment (~5,700장)
+3. **Urine Sediment Detection** (Object Detection)
+   - **Model**: YOLOv8
+   - **Classes**: 14 classes including WBC, RBC, Crystals, Epithelial Cells, etc.
+   - **Dataset**: Roboflow Urine Sediment (~5,700 images)
 
-## 🚀 시작하기
+---
 
-### 1. 환경 설정
+## 🚀 Getting Started
+
+### 1. Environment Setup
 ```bash
-# 가상환경 생성 (권장)
+# Create a virtual environment (Recommended)
 python -m venv venv
 .\venv\Scripts\activate  # Windows
 # source venv/bin/activate  # macOS/Linux
 
-# 패키지 설치
+# Install packages
 pip install -r requirements.txt
 ```
 
-### 2. 데이터 다운로드
+### 2. Download Data
 ```bash
-# Roboflow API 키 설정 (scripts/download_data.py 파일에 직접 입력)
+# Set Roboflow API key (Enter directly in scripts/download_data.py)
 python scripts/download_data.py
 
-# YOLO 데이터를 분류 형식으로 변환
+# Convert YOLO data format to classification format
 python scripts/convert_yolo_to_classification.py
 ```
 
-### 3. 모델 학습
+### 3. Model Training
 ```bash
-# 안구 질환 분류
+# Ocular disease classification
 python src/train_eye_classifier.py
 
-# 치주 질환 분류
+# Periodontal disease classification
 python src/train_dental_classifier.py
 
-# 소변 침전물 탐지
+# Urine sediment detection
 python src/train_urine_detector.py
 ```
 
-### 4. API 서버 시작
+### 4. Start API Server
 ```bash
 uvicorn api.main:app --reload --port 8000
 ```
 
-API 문서: http://localhost:8000/docs
+API Documentation: http://localhost:8000/docs
 
-### 5. 추론 테스트
+### 5. Run Inference Test
 ```bash
 python src/inference.py --model eye --image test_images/dog_eye.jpg
 ```
 
-## 📁 프로젝트 구조
-```
+---
+
+## 📁 Project Structure
+
+```text
 pet-health-ai/
-├── data/                     # 데이터셋 (다운로드 후 생성)
+├── data/                      # Datasets (generated after download)
 │   ├── dog_eye/
 │   ├── dog_dental/
 │   └── urine_sediment/
-├── models/                   # 학습된 모델 저장
+├── models/                    # Saved trained models
 │   ├── eye_classifier/
 │   ├── dental_classifier/
 │   └── urine_detector/
-├── notebooks/                # Jupyter 노트북
+├── notebooks/                 # Jupyter Notebooks
 │   ├── 01_data_exploration.ipynb
 │   ├── 02_eye_training.ipynb
 │   └── 03_dental_training.ipynb
-├── src/                      # 소스 코드
+├── src/                       # Source code
 │   ├── train_eye_classifier.py
 │   ├── train_dental_classifier.py
 │   ├── train_urine_detector.py
 │   ├── inference.py
 │   ├── dataset.py
 │   └── utils.py
-├── api/                      # FastAPI 서버
+├── api/                       # FastAPI server
 │   └── main.py
-├── scripts/                  # 유틸리티 스크립트
+├── scripts/                   # Utility scripts
 │   └── download_data.py
-├── test_images/              # 테스트용 이미지
+├── test_images/               # Test sample images
 ├── requirements.txt
 └── README.md
 ```
 
-## 📊 성능 목표
+---
 
-| 모델 | 목표 Accuracy/mAP | 학습 시간 (예상) |
-|------|------------------|-----------------|
-| 안구 분류 | 85%+ | 1-2시간 |
-| 치주 분류 | 88%+ | 2-4시간 |
-| 소변 탐지 | mAP@50 65%+ | 4-6시간 |
+## 📊 Performance Targets
 
-## 🛠️ 기술 스택
+| Model | Target Metric | Estimated Training Time |
+|-------|---------------|-------------------------|
+| Ocular Classification | Accuracy 85%+ | 1–2 hours |
+| Periodontal Classification | Accuracy 88%+ | 2–4 hours |
+| Urine Detection | mAP@50 65%+ | 4–6 hours |
+
+---
+
+## 🛠️ Tech Stack
 
 - **Deep Learning**: PyTorch, torchvision
 - **Computer Vision**: OpenCV, Albumentations
@@ -113,16 +122,20 @@ pet-health-ai/
 - **API Framework**: FastAPI
 - **Visualization**: Matplotlib, Seaborn, TensorBoard
 
-## 📝 학습 내용
+---
 
-이 프로젝트를 통해 다음을 경험합니다:
-- [x] 전이학습 (Transfer Learning)
-- [x] 이미지 분류 (Image Classification)
-- [x] 객체 탐지 (Object Detection)
-- [x] 데이터 증강 (Data Augmentation)
-- [x] REST API 구축
-- [x] 모델 배포 파이프라인
+## 📝 Key Takeaways & Practices
 
-## 📄 라이선스
+Through this project, the following core topics are explored and implemented:
+- [x] Transfer Learning
+- [x] Image Classification
+- [x] Object Detection
+- [x] Data Augmentation
+- [x] REST API Construction
+- [x] Model Deployment Pipeline
 
-학습용 프로젝트입니다. 데이터셋은 각각의 라이선스를 따릅니다.
+---
+
+## 📄 License
+
+This repository is intended for educational purposes. Each dataset is subject to its respective original license.
